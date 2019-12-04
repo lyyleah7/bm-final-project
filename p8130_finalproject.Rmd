@@ -16,35 +16,9 @@ library(dplyr)
 lawsuit = 
   read_csv("./Lawsuit.csv") %>% 
   janitor::clean_names()
-
-my_labels <- list(dept = "Department,n(%)", gender = "Gender,n(%)", clin = 
-                  "Clin,n(%)",cert = "Cert,n(%)", rank = "Rank,n(%)")
-
-# Clean the output
-my_controls <- tableby.control(
-               total = T,
-               test = F,  # No test p-values yet
-               numeric.stats = c("meansd", "medianq1q3"),
-               cat.stats = c("countpct"),
-               digits = 2,
-               stats.labels = list(
-               meansd = "Mean (SD)",
-               medianq1q3 = "Median (Q1, Q3)",
-               countpct = "N (%)"))
-
-# Make some factors to show N (%)
-pb_1a <- lawsuit %>% 
-          mutate(dept = factor(dept, labels = c("Biochemistry/Molecular Biology", "Physiology","Genetics","Pediatrics","Medicine","Surgery"))) %>%
-          mutate(gender = factor(gender, labels = c("Female","Male"))) %>%
-          mutate(clin = factor(clin, labels = c("Primarily research emphasis", "Primarily clinical emphasis"))) %>%
-          mutate(cert = factor(cert, labels = c("Nor certified", "Board certified"))) %>% 
-          mutate(rank = factor(rank, labels = c("Assistant", "Associate", "Full professor"))) 
-          
-tab1 = tableby(gender ~ dept + clin + cert + prate + exper + rank + sal94 + sal95, data = pb_1a, control = my_controls)
-tab1 %>% 
-summary(title = "EDA", labelTranslations = my_labels, text = T) %>% 
-  knitr::kable()
 ```
+
+# take the average of 2 years salary
 
 ```{r}
 lawsuit = 
@@ -52,44 +26,52 @@ lawsuit =
   mutate(
     aveg_sal = (sal94 + sal95)/2
     )
-
-hist(lawsuit$aveg_sal,breaks = 20,xlab = "averagesal", freq=F, main="The distribution for outcomes")
-lines(density(lawsuit$aveg_sal,na.rm=T),col="red",lwd=2)
-hist(lawsuit$sal94,breaks = 20,xlab = "sal94", freq=F, main="The distribution for outcomes")
-lines(density(lawsuit$sal94,na.rm=T),col="red",lwd=2)
-
-hist(lawsuit$sal95,breaks = 20,xlab = "sal95", freq=F, main="The distribution for outcomes")
-lines(density(lawsuit$sal95,na.rm=T),col="red",lwd=2)
-lawsuit = 
-  lawsuit %>% 
-  mutate(
-    lg_aveg_sal = log(aveg_sal)
-    )
-
-hist(lawsuit$lg_aveg_sal,breaks = 15,xlab = "lg_averagesal", freq=F, main="The distribution for lg_outcomes")
-lines(density(lawsuit$lg_aveg_sal,na.rm=T),col="red",lwd=2)
-
 ```
-## stepwise
+
+# clean the data and do log transformation
 
 ```{r}
-lawsuit =
+lawsuit_clean =
   lawsuit %>% 
-  select(-sal94, -sal95, -aveg_sal, -id) %>% 
-  mutate(
-    dept = factor(dept, levels = c(1,2,3,4,5,6), ordered = TRUE),
-    gender = factor(gender, levels = c(0,1), ordered = TRUE),
-    clin = factor(clin, levels = c(0,1), ordered = TRUE),
-    cert = factor(cert, levels = c(0,1),ordered = TRUE),
-    rank = factor(rank, levels = c(1,2,3), ordered = TRUE)
+  select(-id, -sal94, -sal95) %>% 
+  mutate(lg_aveg_sal = log(aveg_sal),
+    dept = as.factor(dept),
+    gender = as.factor(gender),
+    clin = as.factor(clin),
+    cert = as.factor(cert),
+    rank = as.factor(rank),
+    dept = recode(dept, 
+                  "1"= "bio",
+                  "2" = "phys",
+                  "3" = "gene",
+                  "4" = "ped",
+                  "5" = "med", 
+                  "6" = "surgery"),
+    gender = recode(gender, 
+                    "0" = "female",
+                    "1" = "male"),
+    clin = recode(clin, 
+                  "1" = "clinical",
+                  "0" = "research"),
+    cert = recode(cert, 
+                  "0" = "not",
+                  "1" = "board"),
+    rank = recode(rank, 
+                  "1" = "assitent",
+                  "2" = "associate",
+                  "3" = "full")
   )
 
 
 ```
 
+# model 1 all covariate
 
 ```{r}
-multfit = lm(lg_aveg_sal ~ rank * gender, data = lawsuit)
-summary(multfit)
+fit1 = lm(lg_aveg_sal ~ ., data = lawsuit_clean)
+summary(fit1)
 ```
+
+
+
 

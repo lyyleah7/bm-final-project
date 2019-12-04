@@ -1,0 +1,72 @@
+---
+title: "Data discription and transformation"
+author: "Yiyang LIU"
+date: "2019/12/4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(arsenal)
+library(dplyr)
+```
+
+```{r,message=FALSE}
+lawsuit = 
+  read_csv("./Lawsuit.csv") %>% 
+  janitor::clean_names()
+
+my_labels <- list(dept = "Department,n(%)", gender = "Gender,n(%)", clin = 
+                  "Clin,n(%)",cert = "Cert,n(%)", rank = "Rank,n(%)")
+
+# Clean the output
+my_controls <- tableby.control(
+               total = T,
+               test = F,  # No test p-values yet
+               numeric.stats = c("meansd", "medianq1q3"),
+               cat.stats = c("countpct"),
+               digits = 2,
+               stats.labels = list(
+               meansd = "Mean (SD)",
+               medianq1q3 = "Median (Q1, Q3)",
+               countpct = "N (%)"))
+
+# Make some factors to show N (%)
+pb_1a <- lawsuit %>% 
+          mutate(dept = factor(dept, labels = c("Biochemistry/Molecular Biology", "Physiology","Genetics","Pediatrics","Medicine","Surgery"))) %>%
+          mutate(gender = factor(gender, labels = c("Female","Male"))) %>%
+          mutate(clin = factor(clin, labels = c("Primarily research emphasis", "Primarily clinical emphasis"))) %>%
+          mutate(cert = factor(cert, labels = c("Nor certified", "Board certified"))) %>% 
+          mutate(rank = factor(rank, labels = c("Assistant", "Associate", "Full professor"))) 
+          
+tab1 = tableby(gender ~ dept + clin + cert + prate + exper + rank + sal94 + sal95, data = pb_1a, control = my_controls)
+tab1 %>% 
+summary(title = "EDA", labelTranslations = my_labels, text = T) %>% 
+  knitr::kable()
+```
+
+```{r}
+lawsuit = 
+  lawsuit %>% 
+  mutate(
+    aveg_sal = (sal94 + sal95)/2
+    )
+
+hist(lawsuit$aveg_sal,breaks = 20,xlab = "averagesal", freq=F, main="The distribution for outcomes")
+lines(density(lawsuit$aveg_sal,na.rm=T),col="red",lwd=2)
+hist(lawsuit$sal94,breaks = 20,xlab = "sal94", freq=F, main="The distribution for outcomes")
+lines(density(lawsuit$sal94,na.rm=T),col="red",lwd=2)
+
+hist(lawsuit$sal95,breaks = 20,xlab = "sal95", freq=F, main="The distribution for outcomes")
+lines(density(lawsuit$sal95,na.rm=T),col="red",lwd=2)
+lawsuit = 
+  lawsuit %>% 
+  mutate(
+    lg_aveg_sal = log(aveg_sal)
+    )
+
+hist(lawsuit$lg_aveg_sal,breaks = 15,xlab = "lg_averagesal", freq=F, main="The distribution for lg_outcomes")
+lines(density(lawsuit$lg_aveg_sal,na.rm=T),col="red",lwd=2)
+
+```
