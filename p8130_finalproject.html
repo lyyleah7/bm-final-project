@@ -614,12 +614,36 @@ lines(density(lawsuit$lg_aveg_sal,na.rm=T),col=&quot;red&quot;,lwd=2)</code></pr
   lawsuit %&gt;% 
   select(-sal94, -sal95, -aveg_sal, -id) %&gt;% 
   mutate(
-    dept = factor(dept, levels = c(1,2,3,4,5,6), labels = c(&quot;biochemistry&quot;, &quot;physiology&quot;,&quot;genetics&quot;,&quot;pediatrics&quot;,&quot;medicine&quot;,&quot;surgery&quot;), ordered = TRUE),
-    gender = factor(gender, levels = c(0,1), labels = c(&quot;female&quot;,&quot;male&quot;), ordered = TRUE),
-    clin = factor(clin, levels = c(0,1), labels = c(&quot;research emphasis&quot;,&quot;clinical emphasis&quot;), ordered = TRUE),
-    cert = factor(cert, levels = c(0,1), labels = c(&quot;not certified&quot;, &quot;board certified&quot;),ordered = TRUE),
-    rank = factor(rank, levels = c(1,2,3), labels = c(&quot;assistant&quot;, &quot;associate&quot;,&quot;full professor&quot;), ordered = TRUE)
+    dept = factor(dept, levels = c(1,2,3,4,5,6), ordered = TRUE),
+    gender = factor(gender, levels = c(0,1), ordered = TRUE),
+    clin = factor(clin, levels = c(0,1), ordered = TRUE),
+    cert = factor(cert, levels = c(0,1),ordered = TRUE),
+    rank = factor(rank, levels = c(1,2,3), ordered = TRUE)
   )</code></pre>
+<pre class="r"><code>multfit = lm(lg_aveg_sal ~ rank * gender, data = lawsuit)
+summary(multfit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lg_aveg_sal ~ rank * gender, data = lawsuit)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.04274 -0.37104  0.01751  0.35145  0.96675 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     11.86661    0.03351 354.173  &lt; 2e-16 ***
+## rank.L           0.12511    0.05588   2.239   0.0260 *  
+## rank.Q           0.07828    0.06011   1.302   0.1940    
+## gender.L         0.20756    0.04738   4.380 1.73e-05 ***
+## rank.L:gender.L -0.20283    0.07903  -2.567   0.0108 *  
+## rank.Q:gender.L  0.03994    0.08500   0.470   0.6389    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.4666 on 255 degrees of freedom
+## Multiple R-squared:  0.1752, Adjusted R-squared:  0.1591 
+## F-statistic: 10.84 on 5 and 255 DF,  p-value: 1.829e-09</code></pre>
 
 
 
