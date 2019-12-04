@@ -372,8 +372,6 @@ summary {
 <pre class="r"><code>lawsuit = 
   read_csv(&quot;./Lawsuit.csv&quot;) %&gt;% 
   janitor::clean_names()</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): strings not representable in native encoding
-## will be translated to UTF-8</code></pre>
 <div id="take-the-average-of-2-years-salary" class="section level1">
 <h1>take the average of 2 years salary</h1>
 <pre class="r"><code>lawsuit = 
@@ -386,7 +384,6 @@ summary {
 <h1>clean the data and do log transformation</h1>
 <pre class="r"><code>lawsuit_clean =
   lawsuit %&gt;% 
-  select(-id, -sal94, -sal95) %&gt;% 
   mutate(lg_aveg_sal = log(aveg_sal),
     dept = as.factor(dept),
     gender = as.factor(gender),
@@ -413,42 +410,43 @@ summary {
                   &quot;1&quot; = &quot;assitent&quot;,
                   &quot;2&quot; = &quot;associate&quot;,
                   &quot;3&quot; = &quot;full&quot;)
-  )</code></pre>
+  ) </code></pre>
 </div>
 <div id="model-1-all-covariate" class="section level1">
 <h1>model 1 all covariate</h1>
-<pre class="r"><code>fit1 = lm(lg_aveg_sal ~ ., data = lawsuit_clean)
+<pre class="r"><code>fit1 = lm(lg_aveg_sal ~ clin + cert + dept  + exper + rank * gender, data = lawsuit_clean)
 summary(fit1)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = lg_aveg_sal ~ ., data = lawsuit_clean)
+## lm(formula = lg_aveg_sal ~ clin + cert + dept + exper + rank * 
+##     gender, data = lawsuit_clean)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.38912 -0.05537 -0.00025  0.05925  0.36111 
+## -0.32667 -0.08080 -0.01075  0.07646  0.86686 
 ## 
 ## Coefficients:
-##                 Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)    1.095e+01  9.326e-02 117.426  &lt; 2e-16 ***
-## deptphys      -1.300e-01  2.017e-02  -6.443 6.07e-10 ***
-## deptgene       8.427e-02  2.713e-02   3.106 0.002119 ** 
-## deptped        7.414e-02  3.715e-02   1.996 0.047053 *  
-## deptmed        2.184e-01  3.529e-02   6.188 2.51e-09 ***
-## deptsurgery    2.218e-01  5.749e-02   3.859 0.000146 ***
-## gendermale     3.083e-02  1.391e-02   2.216 0.027577 *  
-## clinclinical   1.015e-01  2.852e-02   3.559 0.000446 ***
-## certboard      1.171e-01  1.524e-02   7.679 3.73e-13 ***
-## prate         -9.824e-03  1.195e-02  -0.822 0.411898    
-## exper          6.478e-03  1.432e-03   4.522 9.51e-06 ***
-## rankassociate  6.684e-02  1.668e-02   4.007 8.14e-05 ***
-## rankfull       9.033e-02  1.966e-02   4.594 6.94e-06 ***
-## aveg_sal       3.632e-06  2.176e-07  16.689  &lt; 2e-16 ***
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              10.959335   0.027936 392.307  &lt; 2e-16 ***
+## clinclinical              0.197031   0.022175   8.885  &lt; 2e-16 ***
+## certboard                 0.191213   0.021363   8.951  &lt; 2e-16 ***
+## deptphys                 -0.175544   0.028871  -6.080 4.53e-09 ***
+## deptgene                  0.184572   0.036206   5.098 6.84e-07 ***
+## deptped                   0.208468   0.035528   5.868 1.41e-08 ***
+## deptmed                   0.543204   0.029364  18.499  &lt; 2e-16 ***
+## deptsurgery               0.931388   0.035267  26.409  &lt; 2e-16 ***
+## exper                     0.018171   0.001806  10.064  &lt; 2e-16 ***
+## rankassociate             0.173142   0.033904   5.107 6.55e-07 ***
+## rankfull                  0.282281   0.039594   7.129 1.11e-11 ***
+## gendermale                0.074479   0.027568   2.702  0.00738 ** 
+## rankassociate:gendermale -0.082943   0.044750  -1.853  0.06501 .  
+## rankfull:gendermale      -0.105271   0.046654  -2.256  0.02492 *  
 ## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.09174 on 247 degrees of freedom
-## Multiple R-squared:  0.9691, Adjusted R-squared:  0.9675 
-## F-statistic: 596.3 on 13 and 247 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.1325 on 247 degrees of freedom
+## Multiple R-squared:  0.9355, Adjusted R-squared:  0.9322 
+## F-statistic: 275.8 on 13 and 247 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 
 

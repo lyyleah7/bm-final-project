@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(arsenal)
 library(dplyr)
+library(MASS)
 ```
 
 ```{r,message=FALSE}
@@ -33,7 +34,6 @@ lawsuit =
 ```{r}
 lawsuit_clean =
   lawsuit %>% 
-  select(-id, -sal94, -sal95) %>% 
   mutate(lg_aveg_sal = log(aveg_sal),
     dept = as.factor(dept),
     gender = as.factor(gender),
@@ -60,7 +60,7 @@ lawsuit_clean =
                   "1" = "assitent",
                   "2" = "associate",
                   "3" = "full")
-  )
+  ) 
 
 
 ```
@@ -68,8 +68,9 @@ lawsuit_clean =
 # model 1 all covariate
 
 ```{r}
-fit1 = lm(lg_aveg_sal ~ ., data = lawsuit_clean)
+fit1 = lm(lg_aveg_sal ~ clin + cert + dept  + exper + rank * gender, data = lawsuit_clean)
 summary(fit1)
+
 ```
 
 
