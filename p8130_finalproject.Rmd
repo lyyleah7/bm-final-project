@@ -77,11 +77,11 @@ lawsuit =
   lawsuit %>% 
   select(-sal94, -sal95, -aveg_sal, -id) %>% 
   mutate(
-    dept = factor(dept, levels = c(1,2,3,4,5,6), labels = c("biochemistry", "physiology","genetics","pediatrics","medicine","surgery"), ordered = TRUE),
-    gender = factor(gender, levels = c(0,1), labels = c("female","male"), ordered = TRUE),
-    clin = factor(clin, levels = c(0,1), labels = c("research emphasis","clinical emphasis"), ordered = TRUE),
-    cert = factor(cert, levels = c(0,1), labels = c("not certified", "board certified"),ordered = TRUE),
-    rank = factor(rank, levels = c(1,2,3), labels = c("assistant", "associate","full professor"), ordered = TRUE)
+    dept = factor(dept, levels = c(1,2,3,4,5,6), ordered = TRUE),
+    gender = factor(gender, levels = c(0,1), ordered = TRUE),
+    clin = factor(clin, levels = c(0,1), ordered = TRUE),
+    cert = factor(cert, levels = c(0,1),ordered = TRUE),
+    rank = factor(rank, levels = c(1,2,3), ordered = TRUE)
   )
 
 
@@ -89,6 +89,7 @@ lawsuit =
 
 
 ```{r}
-
+multfit = lm(lg_aveg_sal ~ rank * gender, data = lawsuit)
+summary(multfit)
 ```
 
