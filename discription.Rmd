@@ -24,7 +24,7 @@ my_labels <- list(dept = "Department,n(%)", gender = "Gender,n(%)", clin =
 # Clean the output
 my_controls <- tableby.control(
                total = T,
-               test = F,  # No test p-values yet
+               test = T,  # No test p-values yet
                numeric.stats = c("meansd", "medianq1q3"),
                cat.stats = c("countpct"),
                digits = 2,

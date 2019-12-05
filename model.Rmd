@@ -68,9 +68,21 @@ lawsuit_clean =
 # model 1 all covariate
 
 ```{r}
-fit1 = lm(lg_aveg_sal ~ clin + cert + dept  + exper + rank * gender, data = lawsuit_clean)
+fit1 = lm(lg_aveg_sal ~ dept  + exper + rank +  gender*clin, data = lawsuit_clean)
 summary(fit1)
+plot(fit1)
 
+fit2 = lm(lg_aveg_sal ~ gender + clin +cert , data = lawsuit_clean)
+summary(fit2)
+
+fit3 = lm(lg_aveg_sal ~ dept + prate + exper + rank + gender * clin , data = lawsuit_clean)
+summary(fit3)
+
+fit4 = lm(lg_aveg_sal ~ dept + prate + exper + rank + gender * cert , data = lawsuit_clean)
+summary(fit4)
+
+fit4 = lm(lg_aveg_sal ~ dept + clin + cert + exper + rank * gender , data = lawsuit_clean)
+summary(fit4)
 ```
 
 

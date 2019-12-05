@@ -379,7 +379,7 @@ my_labels &lt;- list(dept = &quot;Department,n(%)&quot;, gender = &quot;Gender,n
 # Clean the output
 my_controls &lt;- tableby.control(
                total = T,
-               test = F,  # No test p-values yet
+               test = T,  # No test p-values yet
                numeric.stats = c(&quot;meansd&quot;, &quot;medianq1q3&quot;),
                cat.stats = c(&quot;countpct&quot;),
                digits = 2,
@@ -407,6 +407,7 @@ summary(title = &quot;EDA&quot;, labelTranslations = my_labels, text = T) %&gt;%
 <th align="left">Female (N=106)</th>
 <th align="left">Male (N=155)</th>
 <th align="left">Total (N=261)</th>
+<th align="left">p value</th>
 </tr>
 </thead>
 <tbody>
@@ -415,174 +416,203 @@ summary(title = &quot;EDA&quot;, labelTranslations = my_labels, text = T) %&gt;%
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
+<td align="left">&lt; 0.001</td>
 </tr>
 <tr class="even">
 <td>- Biochemistry/Molecular Biology</td>
 <td align="left">20 (18.9%)</td>
 <td align="left">30 (19.4%)</td>
 <td align="left">50 (19.2%)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>- Physiology</td>
 <td align="left">20 (18.9%)</td>
 <td align="left">20 (12.9%)</td>
 <td align="left">40 (15.3%)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>- Genetics</td>
 <td align="left">11 (10.4%)</td>
 <td align="left">10 (6.5%)</td>
 <td align="left">21 (8.0%)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>- Pediatrics</td>
 <td align="left">20 (18.9%)</td>
 <td align="left">10 (6.5%)</td>
 <td align="left">30 (11.5%)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>- Medicine</td>
 <td align="left">30 (28.3%)</td>
 <td align="left">50 (32.3%)</td>
 <td align="left">80 (30.7%)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>- Surgery</td>
 <td align="left">5 (4.7%)</td>
 <td align="left">35 (22.6%)</td>
 <td align="left">40 (15.3%)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>Clin,n(%)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
+<td align="left">0.197</td>
 </tr>
 <tr class="odd">
 <td>- Primarily research emphasis</td>
 <td align="left">46 (43.4%)</td>
 <td align="left">55 (35.5%)</td>
 <td align="left">101 (38.7%)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>- Primarily clinical emphasis</td>
 <td align="left">60 (56.6%)</td>
 <td align="left">100 (64.5%)</td>
 <td align="left">160 (61.3%)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>Cert,n(%)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
+<td align="left">0.074</td>
 </tr>
 <tr class="even">
 <td>- Nor certified</td>
 <td align="left">36 (34.0%)</td>
 <td align="left">37 (23.9%)</td>
 <td align="left">73 (28.0%)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>- Board certified</td>
 <td align="left">70 (66.0%)</td>
 <td align="left">118 (76.1%)</td>
 <td align="left">188 (72.0%)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>prate</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
+<td align="left">0.004</td>
 </tr>
 <tr class="odd">
 <td>- Mean (SD)</td>
 <td align="left">5.35 (1.89)</td>
 <td align="left">4.65 (1.94)</td>
 <td align="left">4.93 (1.94)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>- Median (Q1, Q3)</td>
 <td align="left">5.25 (3.73, 7.27)</td>
 <td align="left">4.00 (3.10, 6.70)</td>
 <td align="left">4.40 (3.20, 6.90)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>exper</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
+<td align="left">&lt; 0.001</td>
 </tr>
 <tr class="even">
 <td>- Mean (SD)</td>
 <td align="left">7.49 (4.17)</td>
 <td align="left">12.10 (6.70)</td>
 <td align="left">10.23 (6.23)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>- Median (Q1, Q3)</td>
 <td align="left">7.00 (5.00, 10.00)</td>
 <td align="left">10.00 (7.00, 15.00)</td>
 <td align="left">9.00 (6.00, 14.00)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>Rank,n(%)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
+<td align="left">&lt; 0.001</td>
 </tr>
 <tr class="odd">
 <td>- Assistant</td>
 <td align="left">69 (65.1%)</td>
 <td align="left">43 (27.7%)</td>
 <td align="left">112 (42.9%)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>- Associate</td>
 <td align="left">21 (19.8%)</td>
 <td align="left">43 (27.7%)</td>
 <td align="left">64 (24.5%)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>- Full professor</td>
 <td align="left">16 (15.1%)</td>
 <td align="left">69 (44.5%)</td>
 <td align="left">85 (32.6%)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>sal94</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
+<td align="left">&lt; 0.001</td>
 </tr>
 <tr class="odd">
 <td>- Mean (SD)</td>
 <td align="left">118871.27 (56168.01)</td>
 <td align="left">177338.76 (85930.54)</td>
 <td align="left">153593.34 (80469.67)</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td>- Median (Q1, Q3)</td>
 <td align="left">108457.00 (75774.50, 143096.00)</td>
 <td align="left">155006.00 (109687.00, 231501.50)</td>
 <td align="left">133284.00 (90771.00, 200543.00)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>sal95</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="left"></td>
+<td align="left">&lt; 0.001</td>
 </tr>
 <tr class="even">
 <td>- Mean (SD)</td>
 <td align="left">130876.92 (62034.51)</td>
 <td align="left">194914.09 (94902.73)</td>
 <td align="left">168906.66 (88778.43)</td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td>- Median (Q1, Q3)</td>
 <td align="left">119135.00 (82345.25, 154170.50)</td>
 <td align="left">170967.00 (119952.50, 257163.00)</td>
 <td align="left">148117.00 (99972.00, 218955.00)</td>
+<td align="left"></td>
 </tr>
 </tbody>
 </table>
