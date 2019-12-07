@@ -85,7 +85,4 @@ title("QQ Plot for Lg(average salary)")
 ```
 
 
-```{r}
-
-```
 
