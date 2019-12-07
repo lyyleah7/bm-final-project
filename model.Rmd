@@ -113,6 +113,8 @@ vif(confounder_fit)
 
 conf_final_fit = lm(lg_aveg_sal ~ gender + dept + clin + cert + exper , data = lawsuit_clean)
 summary(conf_final_fit)
+
+
 ```
 
 # find interaction
