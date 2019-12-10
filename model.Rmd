@@ -11,6 +11,7 @@ library(tidyverse)
 library(arsenal)
 library(dplyr)
 library(MASS)
+library(HH)
 ```
 
 ```{r,message=FALSE}
@@ -25,7 +26,8 @@ lawsuit =
 lawsuit = 
   lawsuit %>% 
   mutate(
-    aveg_sal = (sal94 + sal95)/2
+    aveg_sal = (sal94 + sal95)/2,
+    lg_aveg_sal = log(aveg_sal)
     )
 ```
 
@@ -34,7 +36,7 @@ lawsuit =
 ```{r}
 lawsuit_clean =
   lawsuit %>% 
-  mutate(lg_aveg_sal = log(aveg_sal),
+  mutate(
     dept = as.factor(dept),
     gender = as.factor(gender),
     clin = as.factor(clin),
@@ -65,26 +67,111 @@ lawsuit_clean =
 
 ```
 
-# model 1 all covariate
+
+# find confounder
 
 ```{r}
-fit1 = lm(lg_aveg_sal ~ dept  + exper + rank +  gender*clin, data = lawsuit_clean)
+fit_gender = lm(lg_aveg_sal ~ gender, data = lawsuit_clean)
+summary(fit_gender)
+# gender coefficient =0.3853
+
+fit1 = lm(lg_aveg_sal ~ gender + dept, data = lawsuit_clean)
 summary(fit1)
-plot(fit1)
+anova(fit_gender,fit1)
+# adding dept, gender coefficient =0.20521, 46.74%
 
-fit2 = lm(lg_aveg_sal ~ gender + clin +cert , data = lawsuit_clean)
+fit2 = lm(lg_aveg_sal ~ gender + clin, data = lawsuit_clean)
 summary(fit2)
+anova(fit_gender,fit2)
+# adding clin, gender coef = 0.33718, 12.49%
 
-fit3 = lm(lg_aveg_sal ~ dept + prate + exper + rank + gender * clin , data = lawsuit_clean)
+fit3 = lm(lg_aveg_sal ~ gender + cert, data = lawsuit_clean)
 summary(fit3)
+anova(fit_gender,fit3)
+# adding cert, gender coef = 0.33285, 13.61%
 
-fit4 = lm(lg_aveg_sal ~ dept + prate + exper + rank + gender * cert , data = lawsuit_clean)
+fit4 = lm(lg_aveg_sal ~ gender + prate, data = lawsuit_clean)
 summary(fit4)
+anova(fit_gender,fit4)
+# adding prate, gender coef = 0.2518, 34.65%
 
-fit4 = lm(lg_aveg_sal ~ dept + clin + cert + exper + rank * gender , data = lawsuit_clean)
-summary(fit4)
+fit5 = lm(lg_aveg_sal ~ gender + exper, data = lawsuit_clean)
+summary(fit5)
+anova(fit_gender,fit5)
+#adding exper, gender coef = 0.30755,20.18%
+
+fit6 = lm(lg_aveg_sal ~ gender + rank, data = lawsuit_clean)
+summary(fit6)
+anova(fit_gender,fit6)
+#adding rank, gender coef = 0.34948, 9.3%
+
+confounder_fit = lm(lg_aveg_sal ~ gender + dept + clin + cert + prate + exper, data = lawsuit_clean)
+summary(confounder_fit)
+
+vif(confounder_fit)
+#the vif of prate is larger than 10 ,implying serious collinearity, then we drop prate
+
+conf_final_fit = lm(lg_aveg_sal ~ gender + dept + clin + cert + exper , data = lawsuit_clean)
+summary(conf_final_fit)
+
+
+```
+
+# find interaction
+
+```{r}
+inter1 = lm(lg_aveg_sal ~ gender * dept + clin + cert + exper , data = lawsuit_clean)
+summary(inter1)
+#there is no interaction b/w gender and dept
+
+inter2 = lm(lg_aveg_sal ~ gender*clin + dept  + cert + exper , data = lawsuit_clean)
+summary(inter2)
+
+#there is interaction b/w gender and clin
+
+inter3 = lm(lg_aveg_sal ~ gender*cert + clin + dept + exper , data = lawsuit_clean)
+summary(inter3)
+
+# there is no interaction b/w gender and cert
+
+inter4 = lm(lg_aveg_sal ~ gender*exper + cert + clin + dept , data = lawsuit_clean)
+summary(inter4)
+
+# there is interaction b/w gender and exper
+
+inter5 = lm(lg_aveg_sal ~ gender*prate + dept + clin + cert + exper , data = lawsuit_clean)
+summary(inter5)
+
+# there is no interaction b/w gender and prate
+
+inter6 = lm(lg_aveg_sal ~ gender*rank + dept + clin + cert + exper , data = lawsuit_clean)
+summary(inter6)
+
+```
+
+# stepwise
+```{r}
+final1_fit = lm(lg_aveg_sal ~ dept + gender*clin + cert + gender*exper , data = lawsuit_clean)
+summary(final1_fit)
+
+par(mfrow = c(2, 2))
+plot(final1_fit)
+
+step(final1_fit, direction = 'backward')
 ```
 
 
+# potential outliers
+
+```{r}
+lawsuit_nooutlier = 
+  lawsuit_clean %>% 
+  filter(id != 184)
+
+final2_fit = lm(lg_aveg_sal ~ dept + gender*clin + cert + gender*exper, data = lawsuit_nooutlier)
+summary(final2_fit)
+par(mfrow = c(2, 2))
+plot(final2_fit)
+```
 
 
