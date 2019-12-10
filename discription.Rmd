@@ -2,7 +2,7 @@
 title: "Data discription and transformation"
 author: "Yiyang LIU"
 date: "2019/12/4"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
