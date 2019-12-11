@@ -2,7 +2,13 @@
 title: "Data discription and transformation"
 author: "Yiyang LIU"
 date: "2019/12/4"
+<<<<<<< HEAD
+output:
+  word_document: default
+  html_document: default
+=======
 output: pdf_document
+>>>>>>> 3c0439647323aa999af9f2338ec500156187c4df
 ---
 
 ```{r setup, include=FALSE}
