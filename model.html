@@ -976,11 +976,11 @@ assistant_df =
   lawsuit_clean %&gt;%
   filter(id != 184) %&gt;% 
   filter(rank == &quot;assistant&quot;)
-assistant_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert +exper, data = assistant_df)
+assistant_fit = lm(lg_aveg_sal ~ gender+exper + dept + clin +cert, data = assistant_df)
 summary(assistant_fit)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = lg_aveg_sal ~ gender + dept + clin + cert + exper, 
+## lm(formula = lg_aveg_sal ~ gender + exper + dept + clin + cert, 
 ##     data = assistant_df)
 ## 
 ## Residuals:
@@ -991,6 +991,7 @@ summary(assistant_fit)</code></pre>
 ##               Estimate Std. Error t value Pr(&gt;|t|)    
 ## (Intercept)  10.918928   0.049324 221.371  &lt; 2e-16 ***
 ## gendermale    0.039030   0.030318   1.287 0.200920    
+## exper         0.027242   0.004499   6.054 2.42e-08 ***
 ## deptphys     -0.215107   0.053121  -4.049 0.000101 ***
 ## deptgene      0.143838   0.057944   2.482 0.014700 *  
 ## deptped       0.199035   0.056512   3.522 0.000645 ***
@@ -998,7 +999,6 @@ summary(assistant_fit)</code></pre>
 ## deptsurgery   0.893373   0.059135  15.107  &lt; 2e-16 ***
 ## clinclinical  0.246526   0.036737   6.711 1.14e-09 ***
 ## certboard     0.162553   0.034840   4.666 9.46e-06 ***
-## exper         0.027242   0.004499   6.054 2.42e-08 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1009,11 +1009,11 @@ summary(assistant_fit)</code></pre>
 associate_df =
   lawsuit_clean %&gt;% 
   filter(rank == &quot;associate&quot;)
-associate_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert +exper, data = associate_df)
+associate_fit = lm(lg_aveg_sal ~ gender+exper + dept + clin +cert, data = associate_df)
 summary(associate_fit)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = lg_aveg_sal ~ gender + dept + clin + cert + exper, 
+## lm(formula = lg_aveg_sal ~ gender + exper + dept + clin + cert, 
 ##     data = associate_df)
 ## 
 ## Residuals:
@@ -1024,6 +1024,7 @@ summary(associate_fit)</code></pre>
 ##               Estimate Std. Error t value Pr(&gt;|t|)    
 ## (Intercept)  11.093068   0.045411 244.283  &lt; 2e-16 ***
 ## gendermale   -0.013277   0.031011  -0.428 0.670252    
+## exper         0.021512   0.002619   8.214 4.45e-11 ***
 ## deptphys     -0.189342   0.043481  -4.355 5.99e-05 ***
 ## deptgene      0.170588   0.055740   3.060 0.003439 ** 
 ## deptped       0.210069   0.055921   3.757 0.000424 ***
@@ -1031,7 +1032,6 @@ summary(associate_fit)</code></pre>
 ## deptsurgery   0.931900   0.057099  16.321  &lt; 2e-16 ***
 ## clinclinical  0.220247   0.037705   5.841 3.06e-07 ***
 ## certboard     0.200488   0.031803   6.304 5.53e-08 ***
-## exper         0.021512   0.002619   8.214 4.45e-11 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1043,11 +1043,11 @@ summary(associate_fit)</code></pre>
 full_df =
   lawsuit_clean %&gt;% 
   filter(rank == &quot;full&quot;)
-full_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert +exper, data = full_df)
+full_fit = lm(lg_aveg_sal ~ gender+exper + dept + clin +cert, data = full_df)
 summary(full_fit)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = lg_aveg_sal ~ gender + dept + clin + cert + exper, 
+## lm(formula = lg_aveg_sal ~ gender + exper + dept + clin + cert, 
 ##     data = full_df)
 ## 
 ## Residuals:
@@ -1058,6 +1058,7 @@ summary(full_fit)</code></pre>
 ##               Estimate Std. Error t value Pr(&gt;|t|)    
 ## (Intercept)  11.247757   0.048321 232.773  &lt; 2e-16 ***
 ## gendermale   -0.040413   0.036217  -1.116  0.26805    
+## exper         0.014871   0.002253   6.601 5.15e-09 ***
 ## deptphys     -0.127860   0.038834  -3.292  0.00152 ** 
 ## deptgene      0.248823   0.055205   4.507 2.38e-05 ***
 ## deptped       0.166793   0.066371   2.513  0.01412 *  
@@ -1065,7 +1066,6 @@ summary(full_fit)</code></pre>
 ## deptsurgery   0.948635   0.050331  18.848  &lt; 2e-16 ***
 ## clinclinical  0.179305   0.033412   5.367 8.61e-07 ***
 ## certboard     0.258010   0.033989   7.591 7.14e-11 ***
-## exper         0.014871   0.002253   6.601 5.15e-09 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1077,11 +1077,11 @@ summary(full_fit)</code></pre>
 <pre class="r"><code>experlarge_df = 
   lawsuit_clean %&gt;% 
   filter(exper &gt;= 10)
-experlarge_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert + rank, data = experlarge_df)
+experlarge_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert, data = experlarge_df)
 summary(experlarge_fit)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = lg_aveg_sal ~ gender + dept + clin + cert + rank, 
+## lm(formula = lg_aveg_sal ~ gender + rank + dept + clin + cert, 
 ##     data = experlarge_df)
 ## 
 ## Residuals:
@@ -1092,6 +1092,8 @@ summary(experlarge_fit)</code></pre>
 ##                Estimate Std. Error t value Pr(&gt;|t|)    
 ## (Intercept)   11.229005   0.049542 226.657  &lt; 2e-16 ***
 ## gendermale     0.004783   0.032660   0.146  0.88383    
+## rankassociate  0.135302   0.046060   2.937  0.00402 ** 
+## rankfull       0.241270   0.043781   5.511 2.34e-07 ***
 ## deptphys      -0.134381   0.041565  -3.233  0.00161 ** 
 ## deptgene       0.163540   0.053782   3.041  0.00294 ** 
 ## deptped        0.135009   0.053052   2.545  0.01231 *  
@@ -1099,8 +1101,6 @@ summary(experlarge_fit)</code></pre>
 ## deptsurgery    0.916798   0.048805  18.785  &lt; 2e-16 ***
 ## clinclinical   0.220804   0.031194   7.078 1.40e-10 ***
 ## certboard      0.248027   0.033417   7.422 2.50e-11 ***
-## rankassociate  0.135302   0.046060   2.937  0.00402 ** 
-## rankfull       0.241270   0.043781   5.511 2.34e-07 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1110,11 +1110,11 @@ summary(experlarge_fit)</code></pre>
 <pre class="r"><code>expersmall_df = 
   lawsuit_clean %&gt;% 
   filter(exper &lt; 10)
-expersmall_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert + rank, data = expersmall_df)
+expersmall_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert , data = expersmall_df)
 summary(expersmall_fit)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = lg_aveg_sal ~ gender + dept + clin + cert + rank, 
+## lm(formula = lg_aveg_sal ~ gender + rank + dept + clin + cert, 
 ##     data = expersmall_df)
 ## 
 ## Residuals:
@@ -1125,6 +1125,8 @@ summary(expersmall_fit)</code></pre>
 ##               Estimate Std. Error t value Pr(&gt;|t|)    
 ## (Intercept)   11.07409    0.03858 287.021  &lt; 2e-16 ***
 ## gendermale     0.07255    0.02679   2.709 0.007683 ** 
+## rankassociate  0.14613    0.03223   4.534 1.31e-05 ***
+## rankfull       0.28070    0.04321   6.497 1.66e-09 ***
 ## deptphys      -0.22757    0.04664  -4.879 3.11e-06 ***
 ## deptgene       0.19782    0.05757   3.436 0.000796 ***
 ## deptped        0.23605    0.05733   4.118 6.82e-05 ***
@@ -1132,8 +1134,6 @@ summary(expersmall_fit)</code></pre>
 ## deptsurgery    0.95601    0.06027  15.862  &lt; 2e-16 ***
 ## clinclinical   0.16923    0.03561   4.752 5.31e-06 ***
 ## certboard      0.14907    0.03083   4.836 3.74e-06 ***
-## rankassociate  0.14613    0.03223   4.534 1.31e-05 ***
-## rankfull       0.28070    0.04321   6.497 1.66e-09 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 

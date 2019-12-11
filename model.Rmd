@@ -215,7 +215,7 @@ assistant_df =
   lawsuit_clean %>%
   filter(id != 184) %>% 
   filter(rank == "assistant")
-assistant_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert +exper, data = assistant_df)
+assistant_fit = lm(lg_aveg_sal ~ gender+exper + dept + clin +cert, data = assistant_df)
 summary(assistant_fit)
 
 
@@ -223,7 +223,7 @@ summary(assistant_fit)
 associate_df =
   lawsuit_clean %>% 
   filter(rank == "associate")
-associate_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert +exper, data = associate_df)
+associate_fit = lm(lg_aveg_sal ~ gender+exper + dept + clin +cert, data = associate_df)
 summary(associate_fit)
 
 
@@ -233,7 +233,7 @@ summary(associate_fit)
 full_df =
   lawsuit_clean %>% 
   filter(rank == "full")
-full_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert +exper, data = full_df)
+full_fit = lm(lg_aveg_sal ~ gender+exper + dept + clin +cert, data = full_df)
 summary(full_fit)
 
 
@@ -245,14 +245,14 @@ summary(full_fit)
 experlarge_df = 
   lawsuit_clean %>% 
   filter(exper >= 10)
-experlarge_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert + rank, data = experlarge_df)
+experlarge_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert, data = experlarge_df)
 summary(experlarge_fit)
 
 
 expersmall_df = 
   lawsuit_clean %>% 
   filter(exper < 10)
-expersmall_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert + rank, data = expersmall_df)
+expersmall_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert , data = expersmall_df)
 summary(expersmall_fit)
 ```
 
