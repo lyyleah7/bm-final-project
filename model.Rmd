@@ -206,7 +206,69 @@ summary(inter6)
 
 ```
 
+```{r}
+final1_fit = lm(lg_aveg_sal ~ dept + clin + cert + gender*exper + gender * rank, data = lawsuit_clean)
+summary(final1_fit)
+
+
+par(mfrow = c(2, 2))
+plot(final1_fit)
+
+step(final1_fit, direction = 'backward')
+```
+ 
+ The interaction term between rank and gender is not significant, so we don't consider the interaction between rank and gender.
+
+
 # stratify
+
+## stratify exper using 10
+
+```{r}
+experlarge_df = 
+  lawsuit_clean %>% 
+  filter(exper >= 10)
+experlarge_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert, data = experlarge_df)
+summary(experlarge_fit)
+
+
+expersmall_df = 
+  lawsuit_clean %>% 
+  filter(exper < 10)
+expersmall_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert , data = expersmall_df)
+summary(expersmall_fit)
+```
+
+gender is not significant
+
+# explore outlier
+
+```{r}
+final_model = lm(lg_aveg_sal ~ dept + clin + cert + gender*exper + rank, data = lawsuit_clean)
+summary(final_model)
+par(mfrow = c(2, 2))
+plot(final_model)
+```
+ 184 maybe an outlier
+ 
+## drop 184
+ 
+```{r}
+lawsuit_nooutlier = 
+  lawsuit_clean %>% 
+  filter(id != 184)
+
+final2_fit = lm(lg_aveg_sal ~ dept + clin + cert + gender*exper +rank, data = lawsuit_nooutlier)
+summary(final2_fit)
+par(mfrow = c(2, 2))
+plot(final2_fit)
+```
+
+almost the same, so we don't discard 184
+
+
+
+
 
 ##stratify rank
 ```{r}
@@ -239,49 +301,16 @@ summary(full_fit)
 
 ```
 
-## stratify exper using 10
-
-```{r}
-experlarge_df = 
-  lawsuit_clean %>% 
-  filter(exper >= 10)
-experlarge_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert, data = experlarge_df)
-summary(experlarge_fit)
-
-
-expersmall_df = 
-  lawsuit_clean %>% 
-  filter(exper < 10)
-expersmall_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert , data = expersmall_df)
-summary(expersmall_fit)
-```
 
 
 
 
-```{r}
-final1_fit = lm(lg_aveg_sal ~ dept + clin + cert + gender*exper + gender * rank, data = lawsuit_clean)
-summary(final1_fit)
 
 
-par(mfrow = c(2, 2))
-plot(final1_fit)
-
-step(final1_fit, direction = 'backward')
-```
 
 
-# potential outliers
 
-```{r}
-lawsuit_nooutlier = 
-  lawsuit_clean %>% 
-  filter(id != 184)
 
-final2_fit = lm(lg_aveg_sal ~ dept + clin + cert + gender*exper +gender*rank, data = lawsuit_nooutlier)
-summary(final2_fit)
-par(mfrow = c(2, 2))
-plot(final2_fit)
-```
+
 
 
