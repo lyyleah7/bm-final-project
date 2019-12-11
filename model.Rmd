@@ -12,8 +12,8 @@ library(arsenal)
 library(dplyr)
 library(MASS)
 library(HH)
-library(GGally)
-library(ggplot2)
+
+theme_set(theme_minimal() + theme_bw() + theme(legend.position = "bottom"))
 ```
 
 ```{r,message=FALSE}
@@ -61,19 +61,13 @@ lawsuit_clean =
                   "0" = "not",
                   "1" = "board"),
     rank = recode(rank, 
-                  "1" = "assitent",
+                  "1" = "assistant",
                   "2" = "associate",
                   "3" = "full")
   ) 
 
 
 ```
-
-```{r, message=FALSE}
-  ggpairs(data = lawsuit_clean, aes(color = gender), columns = c("dept", "clin", "cert", "prate", "exper", "rank", "gender", "lg_aveg_sal"),
-          lower =list(continuous = wrap("points", alpha = 0.3, size =0.1),combo = wrap("dot", alpha = 0.4, size = 0.2)))
-```
-
 
 
 # find confounder
@@ -113,13 +107,13 @@ summary(fit6)
 anova(fit_gender,fit6)
 #adding rank, gender coef = 0.34948, 9.3%
 
-confounder_fit = lm(lg_aveg_sal ~ gender + dept + clin + cert + prate + exper, data = lawsuit_clean)
+confounder_fit = lm(lg_aveg_sal ~ gender + dept + clin + cert + prate + exper + rank, data = lawsuit_clean)
 summary(confounder_fit)
 
 vif(confounder_fit)
 #the vif of prate is larger than 10 ,implying serious collinearity, then we drop prate
 
-conf_final_fit = lm(lg_aveg_sal ~ gender + dept + clin + cert + exper , data = lawsuit_clean)
+conf_final_fit = lm(lg_aveg_sal ~ gender + dept + clin + cert + exper+ rank, data = lawsuit_clean)
 summary(conf_final_fit)
 
 
@@ -128,39 +122,98 @@ summary(conf_final_fit)
 # find interaction
 
 ```{r}
-inter1 = lm(lg_aveg_sal ~ gender * dept + clin + cert + exper , data = lawsuit_clean)
+
+```
+
+
+```{r}
+inter1 = lm(lg_aveg_sal ~ gender * dept + clin + cert + exper + rank , data = lawsuit_clean)
 summary(inter1)
 #there is no interaction b/w gender and dept
 
-inter2 = lm(lg_aveg_sal ~ gender*clin + dept  + cert + exper , data = lawsuit_clean)
+inter2 = lm(lg_aveg_sal ~ gender*clin + dept  + cert + exper + rank , data = lawsuit_clean)
 summary(inter2)
 
-#there is interaction b/w gender and clin
+#there is no interaction b/w gender and clin
 
-inter3 = lm(lg_aveg_sal ~ gender*cert + clin + dept + exper , data = lawsuit_clean)
+inter3 = lm(lg_aveg_sal ~ gender*cert + clin + dept + exper +rank, data = lawsuit_clean)
 summary(inter3)
 
 # there is no interaction b/w gender and cert
 
-inter4 = lm(lg_aveg_sal ~ gender*exper + cert + clin + dept , data = lawsuit_clean)
+inter4 = lm(lg_aveg_sal ~ gender*exper + cert + clin + dept + rank , data = lawsuit_clean)
 summary(inter4)
 
 # there is interaction b/w gender and exper
 
-inter5 = lm(lg_aveg_sal ~ gender*prate + dept + clin + cert + exper , data = lawsuit_clean)
+inter5 = lm(lg_aveg_sal ~ gender*prate + dept + clin + cert + exper +rank , data = lawsuit_clean)
 summary(inter5)
 
 # there is no interaction b/w gender and prate
 
 inter6 = lm(lg_aveg_sal ~ gender*rank + dept + clin + cert + exper , data = lawsuit_clean)
 summary(inter6)
+# there is interaction b/w gender and rank
 
 ```
 
-# stepwise
+# stratify
+
+##stratify rank
 ```{r}
-final1_fit = lm(lg_aveg_sal ~ dept + gender*clin + cert + gender*exper , data = lawsuit_clean)
+#assistant
+assistant_df =
+  lawsuit_clean %>%
+  filter(id != 184) %>% 
+  filter(rank == "assistant")
+assistant_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert +exper, data = assistant_df)
+summary(assistant_fit)
+
+
+#associate
+associate_df =
+  lawsuit_clean %>% 
+  filter(rank == "associate")
+associate_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert +exper, data = associate_df)
+summary(associate_fit)
+
+
+
+#full professor
+
+full_df =
+  lawsuit_clean %>% 
+  filter(rank == "full")
+full_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert +exper, data = full_df)
+summary(full_fit)
+
+
+```
+
+## stratify exper using 10
+
+```{r}
+experlarge_df = 
+  lawsuit_clean %>% 
+  filter(exper >= 10)
+experlarge_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert + rank, data = experlarge_df)
+summary(experlarge_fit)
+
+
+expersmall_df = 
+  lawsuit_clean %>% 
+  filter(exper < 10)
+expersmall_fit = lm(lg_aveg_sal ~ gender + dept + clin +cert + rank, data = expersmall_df)
+summary(expersmall_fit)
+```
+
+
+
+
+```{r}
+final1_fit = lm(lg_aveg_sal ~ dept + clin + cert + gender*exper + gender * rank, data = lawsuit_clean)
 summary(final1_fit)
+
 
 par(mfrow = c(2, 2))
 plot(final1_fit)
@@ -176,7 +229,7 @@ lawsuit_nooutlier =
   lawsuit_clean %>% 
   filter(id != 184)
 
-final2_fit = lm(lg_aveg_sal ~ dept + gender*clin + cert + gender*exper, data = lawsuit_nooutlier)
+final2_fit = lm(lg_aveg_sal ~ dept + clin + cert + gender*exper +gender*rank, data = lawsuit_nooutlier)
 summary(final2_fit)
 par(mfrow = c(2, 2))
 plot(final2_fit)
