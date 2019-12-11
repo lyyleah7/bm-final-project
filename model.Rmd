@@ -12,8 +12,9 @@ library(arsenal)
 library(dplyr)
 library(MASS)
 library(HH)
+library(ggpubr)
 
-theme_set(theme_minimal() + theme_bw() + theme(legend.position = "bottom"))
+theme_set(theme_minimal() + theme_bw())
 ```
 
 ```{r,message=FALSE}
@@ -122,7 +123,55 @@ summary(conf_final_fit)
 # find interaction
 
 ```{r}
+# gender may have interaction with exper
+exper_fig =
+  lawsuit_clean %>% 
+  ggplot(aes(x = exper, y = lg_aveg_sal)) +geom_point(aes(color = gender)) +geom_smooth(method = "lm", aes(color = gender))
+# gender may not have interaction with prate
+prate_fig =
+  lawsuit_clean %>% 
+  ggplot(aes(x = prate, y = lg_aveg_sal)) +geom_point(aes(color = gender)) +geom_smooth(method = "lm", aes(color = gender))
+```
 
+
+
+```{r}
+clin_fig = 
+lawsuit_clean %>% 
+ggplot(aes(x = clin, y = lg_aveg_sal, fill = gender)) +
+  geom_boxplot() +
+  xlab("clin") +
+  ylab("Lg(average salary)")
+
+cert_fig = 
+lawsuit_clean %>% 
+ggplot(aes(x = cert, y = lg_aveg_sal, fill = gender)) +
+  geom_boxplot() +
+  xlab("cert") +
+  ylab("Lg(average salary)")
+
+rank_fig = 
+lawsuit_clean %>% 
+ggplot(aes(x = rank, y = lg_aveg_sal, fill = gender)) +
+  geom_boxplot() +
+  xlab("rank") +
+  ylab("Lg(average salary)")
+  
+dept_fig = 
+lawsuit_clean %>% 
+ggplot(aes(x = dept, y = lg_aveg_sal, fill = gender)) +
+  geom_boxplot() +
+  xlab("department") +
+  ylab("Lg(average salary)")
+
+gender_fig = 
+lawsuit_clean %>% 
+ggplot(aes(x = gender, y = lg_aveg_sal, fill = gender)) +
+  geom_boxplot() +
+  xlab("gender") +
+  ylab("Lg(average salary)")
+
+ggarrange(exper_fig,prate_fig, dept_fig, clin_fig, cert_fig, rank_fig, gender_fig,ncol = 3, nrow = 3)
 ```
 
 
