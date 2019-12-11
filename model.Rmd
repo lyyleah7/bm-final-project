@@ -2,7 +2,7 @@
 title: "model"
 author: "YI LIU"
 date: "12/3/2019"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -237,6 +237,7 @@ expersmall_df =
   filter(exper < 10)
 expersmall_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert , data = expersmall_df)
 summary(expersmall_fit)
+
 ```
 
 gender is not significant
