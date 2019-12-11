@@ -2,9 +2,13 @@
 title: "Data discription and transformation"
 author: "Yiyang LIU"
 date: "2019/12/4"
+<<<<<<< HEAD
 output:
   word_document: default
   html_document: default
+=======
+output: pdf_document
+>>>>>>> 3c0439647323aa999af9f2338ec500156187c4df
 ---
 
 ```{r setup, include=FALSE}
@@ -12,10 +16,12 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(arsenal)
 library(dplyr)
-
+library(GGally)
+library(ggplot2)
+theme_set(theme_minimal() + theme_bw() + theme(legend.position = "bottom"))
 ```
 
-```{r,message=FALSE}
+```{r,message=FALSE, echo=FALSE}
 lawsuit = 
   read_csv("./Lawsuit.csv") %>% 
   janitor::clean_names()
@@ -26,7 +32,7 @@ my_labels <- list(dept = "Department,n(%)", gender = "Gender,n(%)", clin =
 # Clean the output
 my_controls <- tableby.control(
                total = T,
-               test = T,  # No test p-values yet
+               test = F,  # No test p-values yet
                numeric.stats = c("meansd", "medianq1q3"),
                cat.stats = c("countpct"),
                digits = 2,
@@ -49,7 +55,7 @@ summary(title = "EDA", labelTranslations = my_labels, text = T) %>%
   knitr::kable()
 ```
 
-```{r}
+```{r,echo=FALSE}
 lawsuit = 
   lawsuit %>% 
   mutate(
@@ -86,5 +92,40 @@ title("QQ Plot for Lg(average salary)")
 
 ```
 
+```{r, echo=FALSE}
+lawsuit_clean =
+  lawsuit %>% 
+  mutate(
+    dept = as.factor(dept),
+    gender = as.factor(gender),
+    clin = as.factor(clin),
+    cert = as.factor(cert),
+    rank = as.factor(rank),
+    dept = recode(dept, 
+                  "1"= "bio",
+                  "2" = "phys",
+                  "3" = "gene",
+                  "4" = "ped",
+                  "5" = "med", 
+                  "6" = "surgery"),
+    gender = recode(gender, 
+                    "0" = "female",
+                    "1" = "male"),
+    clin = recode(clin, 
+                  "1" = "clinical",
+                  "0" = "research"),
+    cert = recode(cert, 
+                  "0" = "not",
+                  "1" = "board"),
+    rank = recode(rank, 
+                  "1" = "assitent",
+                  "2" = "associate",
+                  "3" = "full")
+  ) 
+```
 
+```{r, echo=FALSE, message=FALSE}
+  ggpairs(data = lawsuit_clean, aes(color = gender), columns = c("dept", "clin", "cert", "prate", "exper", "rank", "gender", "lg_aveg_sal"),
+          lower =list(continuous = wrap("points", alpha = 0.3, size =0.1),combo = wrap("dot", alpha = 0.4, size = 0.2)))
+```
 
