@@ -2,7 +2,7 @@
 title: "model"
 author: "YI LIU"
 date: "12/3/2019"
-output: github_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -138,30 +138,30 @@ prate_fig =
 ```{r}
 clin_fig = 
 lawsuit_clean %>% 
-ggplot(aes(x = clin, y = lg_aveg_sal, fill = gender)) +
+ggplot(aes(x = gender, y = lg_aveg_sal, fill = clin)) +
   geom_boxplot() +
-  xlab("clin") +
+  xlab("gender") +
   ylab("Lg(average salary)")
 
 cert_fig = 
 lawsuit_clean %>% 
-ggplot(aes(x = cert, y = lg_aveg_sal, fill = gender)) +
+ggplot(aes(x = gender, y = lg_aveg_sal, fill = cert)) +
   geom_boxplot() +
-  xlab("cert") +
+  xlab("gender") +
   ylab("Lg(average salary)")
 
 rank_fig = 
 lawsuit_clean %>% 
-ggplot(aes(x = rank, y = lg_aveg_sal, fill = gender)) +
+ggplot(aes(x = gender, y = lg_aveg_sal, fill = rank)) +
   geom_boxplot() +
-  xlab("rank") +
+  xlab("gender") +
   ylab("Lg(average salary)")
   
 dept_fig = 
 lawsuit_clean %>% 
-ggplot(aes(x = dept, y = lg_aveg_sal, fill = gender)) +
+ggplot(aes(x =gender, y = lg_aveg_sal, fill = dept)) +
   geom_boxplot() +
-  xlab("department") +
+  xlab("gender") +
   ylab("Lg(average salary)")
 
 gender_fig = 
@@ -222,20 +222,20 @@ step(final1_fit, direction = 'backward')
 
 # stratify
 
-## stratify exper using 10
+## stratify exper using 9
 
 ```{r}
 experlarge_df = 
   lawsuit_clean %>% 
-  filter(exper >= 10)
-experlarge_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert, data = experlarge_df)
+  filter(exper >= 9)
+experlarge_fit = lm(lg_aveg_sal ~ gender+rank + dept+ clin +cert, data = experlarge_df)
 summary(experlarge_fit)
 
 
 expersmall_df = 
   lawsuit_clean %>% 
-  filter(exper < 10)
-expersmall_fit = lm(lg_aveg_sal ~ gender+rank + dept + clin +cert , data = expersmall_df)
+  filter(exper < 9)
+expersmall_fit = lm(lg_aveg_sal ~ gender+rank + dept  + clin +cert, data = expersmall_df)
 summary(expersmall_fit)
 
 ```
